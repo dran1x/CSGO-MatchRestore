@@ -1,0 +1,4 @@
+{
+    "sourcepawn.MainPath": "src\\sm_matchrestore.sp",
+    "sourcepawn.outputDirectoryPath": "compiled/"
+}
