@@ -1,5 +1,6 @@
 #include <matchrestore>
 #include <ripext/json>
+#include <cassandra>
 #include <sourcemod>
 
 #define PLUGIN_DESCRIPTION ""
@@ -13,16 +14,17 @@ enum struct Global
 	ConVar Debug;
 	ConVar Enabled;
 	ConVar AutoLoad;
+	ConVar AutoPause;
 
-	ConVar RecentFiles;
+	// ConVar RecentFiles;
 	ConVar AutoLoadPause;
-	ConVar LoadFile;
+	// ConVar LoadFile;
 	ConVar StoreMemory;
 	ConVar FilePrefix;
-	ConVar LastFile;
+	// ConVar LastFile;
 	ConVar FilePattern;
 
-	GlobalForward fOnMatchRestored;
+	GlobalForward fOnMatchRestore;
 }
 
 Global Core;
@@ -39,16 +41,17 @@ public void OnPluginStart()
 {
 	CreateConVar("mr_version", PLUGIN_VERSION, PLUGIN_DESCRIPTION, FCVAR_NOTIFY | FCVAR_DONTRECORD | FCVAR_REPLICATED);
 
-	Core.Debug    = CreateConVar("mr_debug", "0", "Enable plugin debugging.");
-	Core.Enabled  = CreateConVar("mr_enable", "1", "Enable plugin functionality.");
-	Core.AutoLoad = CreateConVar("mr_autoload", "1", "Attempts to auto load backups on game start after crash.");
+	Core.Debug     = CreateConVar("mr_debug", "0", "Enable plugin debugging.");
+	Core.Enabled   = CreateConVar("mr_enable", "1", "Enable plugin functionality.");
+	Core.AutoLoad  = CreateConVar("mr_autoload", "1", "Attempts to auto load backups on game start after crash.");
+	Core.AutoPause = CreateConVar("mr_autopause", "1", "Auto pauses the game if a match is restored.");
 
-	Core.RecentFiles   = FindConVar("mp_backup_restore_list_files");
+	// Core.RecentFiles   = FindConVar("mp_backup_restore_list_files");
 	Core.AutoLoadPause = FindConVar("mp_backup_restore_load_autopause");
-	Core.LoadFile      = FindConVar("mp_backup_restore_load_file");
+	// Core.LoadFile      = FindConVar("mp_backup_restore_load_file");
 	Core.StoreMemory   = FindConVar("mp_backup_round_auto");
 	Core.FilePrefix    = FindConVar("mp_backup_round_file");
-	Core.LastFile      = FindConVar("mp_backup_round_file_last");
+	// Core.LastFile      = FindConVar("mp_backup_round_file_last");
 	Core.FilePattern   = FindConVar("mp_backup_round_file_pattern");
 }
 
@@ -61,7 +64,12 @@ public APLRes AskPluginLoad2(Handle hSelf, bool bLate, char[] szError, int iLeng
 		return APLRes_Failure;
 	}
 
-	Core.fOnMatchRestored = CreateGlobalForward("MR_OnMatchRestored", ET_Ignore);
+	Core.fOnMatchRestore = CreateGlobalForward("MR_OnMatchRestore", ET_Ignore);
 
 	return APLRes_Success;
+}
+
+public void OnConVarChanged(ConVar hCvar, const char[] szOldValue, const char[] szNewValue)
+{
+
 }

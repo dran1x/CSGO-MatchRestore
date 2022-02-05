@@ -8,4 +8,4 @@
  *
  *	@noreturn
 */
-forward void MR_OnMatchRestored();
+forward void MR_OnMatchRestore();
